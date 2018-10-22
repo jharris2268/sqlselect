@@ -1,0 +1,5 @@
+python/sqlselect.egg-info
+python/sqlselect/*.pyc
+pytohn/old
+python/dist
+python/build
