@@ -50,14 +50,14 @@ sqlselect::Value read_value(const std::string& data) {
     }
     
     size_t pos=0;
-    auto tg=oqt::readPbfTag(data,pos);
+    auto tg=oqt::read_pbf_tag(data,pos);
     if (pos != data.size()) { throw std::domain_error("value with more than one tag???"); }
     
     if (tg.tag==1) { return sqlselect::s(tg.data); }
     
     if (tg.tag==4) { return sqlselect::Value(tg.value); }
     if (tg.tag==5) { return sqlselect::Value((int64) tg.value); }
-    if (tg.tag==6) { return sqlselect::Value(oqt::unZigZag(tg.value)); }
+    if (tg.tag==6) { return sqlselect::Value(oqt::un_zig_zag(tg.value)); }
     if (tg.tag==7) { return sqlselect::Value((tg.value==1)); }
     
     return sqlselect::null_value();
@@ -67,7 +67,7 @@ struct dedelta {
     dedelta() : d(0) {}
     
     int64 operator()(oqt::uint64 v) {
-        d += oqt::unZigZag(v);
+        d += oqt::un_zig_zag(v);
         return d;
     }
     int64 d;
@@ -251,12 +251,12 @@ sqlselect::Feature::Ptr read_mvt_feature(
     
     
     size_t pos=0;
-    oqt::PbfTag tg = oqt::readPbfTag(data, pos);
-    for ( ; tg.tag>0; tg=oqt::readPbfTag(data, pos)) {
+    oqt::PbfTag tg = oqt::read_pbf_tag(data, pos);
+    for ( ; tg.tag>0; tg=oqt::read_pbf_tag(data, pos)) {
         if (tg.tag==1) {
             id = (int64) tg.value;
         } else if (tg.tag==2) {
-            auto ii = oqt::readPackedInt(tg.data);
+            auto ii = oqt::read_packed_int(tg.data);
             for (size_t i=0; i < ii.size(); i+=2) {
                 if (keys.at(ii.at(i))=="min_zoom") {
                     try {
@@ -269,7 +269,7 @@ sqlselect::Feature::Ptr read_mvt_feature(
         } else if (tg.tag==3) {
             gt=tg.value;
         } else if (tg.tag==4) {
-            cmds = oqt::readPackedInt(tg.data);
+            cmds = oqt::read_packed_int(tg.data);
         } else if (tg.tag==8) {
             //bounds, skip
         }
@@ -291,8 +291,8 @@ void read_mvt_layer(sqlselect::Data_map& result, const transform_func& forward, 
     int64 np=4096;
     
     size_t pos=0;
-    oqt::PbfTag tg = oqt::readPbfTag(data, pos);
-    for ( ; tg.tag>0; tg=oqt::readPbfTag(data, pos)) {
+    oqt::PbfTag tg = oqt::read_pbf_tag(data, pos);
+    for ( ; tg.tag>0; tg=oqt::read_pbf_tag(data, pos)) {
         if (tg.tag==15) {
             if (tg.value!=2) { throw std::domain_error("wrong version??"); }
         } else if (tg.tag==1) {
@@ -341,9 +341,9 @@ sqlselect::Data_map read_mvt_tile(const std::string& data_in, int64 tx, int64 ty
     sqlselect::Data_map result;
     
     size_t pos=0;
-    oqt::PbfTag tg = oqt::readPbfTag(data_in, pos);
+    oqt::PbfTag tg = oqt::read_pbf_tag(data_in, pos);
     
-    for ( ; tg.tag>0; tg=oqt::readPbfTag(data_in, pos)) {
+    for ( ; tg.tag>0; tg=oqt::read_pbf_tag(data_in, pos)) {
         if (tg.tag==3) {
             read_mvt_layer(result, forward, tg.data);
         } else {

@@ -1,7 +1,7 @@
 #ifndef SQLSELECT_PY_HPP
 #define SQLSELECT_PY_HPP
 
-#include "sqlselect.hpp"
+#include "sqlselect/sqlselect.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>

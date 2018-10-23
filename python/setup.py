@@ -19,9 +19,6 @@ cflags += ['-DPICOJSON_USE_INT64',]
 #libs.append('-lboost_thread')
 
 srcs=['../src/'+f for f in (
-    "cols.cpp",
-    "columns.cpp",
-    "data.cpp",
     "feature.cpp",
     "result.cpp",
     "table.cpp",
@@ -50,7 +47,7 @@ ext_modules = [
         srcs,
         include_dirs=[
             '/usr/local/include',
-            '../include/sqlselect',
+            '../include/',
             '/home/james/work/oqtcpp/include',
             
         ],
