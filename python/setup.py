@@ -1,9 +1,10 @@
-from setuptools import setup, Extension
-import setuptools
+from distutils.core import setup, Extension
+from distutils.command.build_ext import build_ext
+from distutils.sysconfig import customize_compiler
 import shutil, os.path, subprocess
 
 def call_pkgconfig(args):
-    ans = subprocess.check_output(args)
+    ans = subprocess.check_output(args).decode('utf8')
     return ans.split()
 cflags = ['-std=c++14']
 libs =['-L/usr/local/lib', '-loqt',]
@@ -29,8 +30,6 @@ srcs.append('src/sqlselect.cpp')
 srcs.append('src/geojson.cpp')
 srcs.append('src/mvt.cpp')
 
-from distutils.command.build_ext import build_ext
-from distutils.sysconfig import customize_compiler
 
 class my_build_ext(build_ext):
     def build_extensions(self):
@@ -47,12 +46,10 @@ ext_modules = [
         srcs,
         include_dirs=[
             '/usr/local/include',
-            '../include/',
-            '/home/james/work/oqtcpp/include',
-            
+            '../include/',            
         ],
         extra_link_args=libs,
-        extra_compile_args=cflags
+        extra_compile_args=cflags,
         
     ),
     
@@ -68,5 +65,6 @@ setup(
     long_description='',
     ext_modules=ext_modules,
     zip_safe=False,
-    cmdclass = {'build_ext': my_build_ext}
+    cmdclass = {'build_ext': my_build_ext},
 )
+

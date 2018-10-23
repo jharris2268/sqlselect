@@ -20,7 +20,7 @@
 #
 #-----------------------------------------------------------------------
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 from arpeggio import *
 from arpeggio import RegExMatch as _
 import collections, json
@@ -261,7 +261,7 @@ class Visitor(PTNodeVisitor):
         
         elif fn == 'round':
             return sq.AsInteger(c[1][0])
-        print 'other func', fn
+        print('other func', fn)
         return Func(c[0],c[1] if len(c)>1 else [])
 
 
@@ -334,7 +334,7 @@ class Visitor(PTNodeVisitor):
                     return sq.Op(sq.ColumnAccess(c[0],k),get_comparision_op('='),sq.Val(v))
                 
             else:
-                print '??',c
+                print('??',c)
         opf = get_comparision_op(c[1])
         
         return sq.Op(c[0],opf,c[2])

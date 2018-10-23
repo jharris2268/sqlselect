@@ -20,6 +20,7 @@
 #
 #-----------------------------------------------------------------------
 
+from __future__ import print_function
 from sqlparse import proc
 import _sqlselect as sq
 import pymapnik11 as mk
@@ -304,7 +305,7 @@ class TiledDataCommon:
         if self.msgs:
             a=mk.tile_bound(mx,my,tile_zoom)
             b=a.intersection(bounds)
-            print 'tile %d %d %d %0.1f // %0.1f [%5.1f%%]' % (mx,my,tile_zoom, a.area,bounds.area, 100.*b.area/bounds.area)
+            print('tile %d %d %d %0.1f // %0.1f [%5.1f%%]' % (mx,my,tile_zoom, a.area,bounds.area, 100.*b.area/bounds.area))
         
         return (mx,my)
     
@@ -317,7 +318,7 @@ class TiledDataCommon:
         mx,my = mk.coord_to_tile(bounds.minx, bounds.maxy, tile_zoom)
         Mx,My = mk.coord_to_tile(bounds.maxx, bounds.miny, tile_zoom)
         if self.msgs: 
-            print 'tile range zoom %d: %0.1f %0.1f => %0.1f %0.1f' % (tile_zoom, mx,my,Mx,My)
+            print('tile range zoom %d: %0.1f %0.1f => %0.1f %0.1f' % (tile_zoom, mx,my,Mx,My))
         
         for xi,yi in iter_tile_range(mx,my,Mx,My,self.mintilearea):
             yield xi, yi
@@ -351,7 +352,7 @@ class TiledDataCommon:
                 
                 
         if self.msgs:
-            print ", ".join("%s: %d" % (k,len(v)) for k,v in merged.iteritems())
+            print(", ".join("%s: %d" % (k,len(v)) for k,v in merged.iteritems()))
         dm=sq.DataMap()
         for k,v in merged.iteritems():
             dm[self.tabprfx+k]=v
@@ -417,7 +418,7 @@ class GeoJsonTiles(TiledDataCommon):
             return sq.read_geojson_tile(pps,xi,yi,tile_zoom,np)
             
         except Exception as ex:
-            print ex
+            print(ex)
         
         return None
 
@@ -447,13 +448,13 @@ class AltDs:
             c,res = mk.utils.time_op((sq.make_result_split_featureset if self.split_multigeoms else sq.make_result_featureset),result,ctx)
             self.times.append((query,minzoom,a,b,c))
             if self.msgs and self.idx is not None:
-                print "layer %d: %0.3fs, %0.3fs, %0.3fs" % (self.idx, a, b, c)
+                print("layer %d: %0.3fs, %0.3fs, %0.3fs" % (self.idx, a, b, c))
             
             if not result:
                 return mk.make_python_featureset([])
             return res
         except Exception as ex:
-            print ex
+            print(ex)
             return mk.make_python_featureset([])
     
     
@@ -482,7 +483,7 @@ def convert_postgis_to_altds(mp, tiles, tabpp=None,**kwargs):
                     kw['split_multigeoms']=True
                 dses[i] = AltDs(tiles, tt,idx=i,**kw)
             except Exception as ex:
-                print 'layer %d failed: %s' % (i,ex)
+                print('layer %d failed: %s' % (i,ex))
     
     for k,v in dses.iteritems():
         v.set_to_layer(mp, k)
