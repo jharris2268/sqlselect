@@ -4,8 +4,14 @@ from distutils.sysconfig import customize_compiler
 import shutil, os.path, subprocess
 
 def call_pkgconfig(args):
-    ans = subprocess.check_output(args).decode('utf8')
-    return ans.split()
+    try:
+        ans = subprocess.getoutput(args)
+        return ans.split()
+    except:
+        ans = subprocess.check_output(args)
+        return ans.split()
+        
+        
 cflags = ['-std=c++14']
 libs =['-L/usr/local/lib', '-loqt',]
 libs += call_pkgconfig(['mapnik-config','--libs'])

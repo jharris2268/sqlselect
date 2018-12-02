@@ -248,6 +248,11 @@ class Visitor(PTNodeVisitor):
         elif fn == 'substr':
             
             return sq.SubStr(c[1][0],c[1][1],c[1][2])
+        elif fn == 'substring':
+            #print(c)
+            #print('sq.SubStr', c[1][0],sq.Value(0),sq.CharLength(c[1][1]))
+            return sq.SubStr(c[1][0],sq.Val(sq.Value(0)),sq.CharLength(c[1][1]))
+        
         
         elif fn == 'array_to_string':
             #print 'array_to_string', c[1][0],repr(c[1][1].StoredValue())
@@ -262,7 +267,7 @@ class Visitor(PTNodeVisitor):
         elif fn == 'round':
             return sq.AsInteger(c[1][0])
         print('other func', fn)
-        return Func(c[0],c[1] if len(c)>1 else [])
+        #return Func(c[0],c[1] if len(c)>1 else [])
 
 
     def visit_fieldlist(self,n,c):

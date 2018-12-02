@@ -192,11 +192,11 @@ class Tiles:
     
     def __call__(self, bounds, zoom):
     
-        kk = (bounds.tuple,zoom)
+        kk = (bounds,zoom)
         if kk in self.cache and self.cache[kk][1] is not None:
             return self.cache[kk][1]
         
-        box_oqt = oqt._oqt.bbox(*map(oqt.intm, mk.backward(bounds).tuple))
+        box_oqt = oqt._oqt.bbox(*map(oqt.intm, mk.backward(bounds)))
         
         a,dm = mk.utils.time_op(sq.make_datamap_filter, self.tiles, box_oqt, zoom, True)
         dd = sq.make_data(dm)
